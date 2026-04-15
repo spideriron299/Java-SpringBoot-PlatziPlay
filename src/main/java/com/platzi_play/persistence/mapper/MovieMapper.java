@@ -2,6 +2,7 @@ package com.platzi_play.persistence.mapper;
 
 import com.platzi_play.domain.dto.MovieDto;
 import com.platzi_play.persistence.entity.MovieEntity;
+import org.mapstruct.InheritInverseConfiguration;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -17,4 +18,7 @@ public interface MovieMapper {
     @Mapping(source = "clasificacion", target = "rating")
     MovieDto toDto(MovieEntity entity);
     List<MovieDto> toDto(Iterable<MovieEntity> entities);
+    @InheritInverseConfiguration
+    @Mapping(source = "genre", target = "genero", qualifiedByName = "genreToString")
+    MovieEntity toEntity(MovieDto dto);
 }
