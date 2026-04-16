@@ -5,6 +5,11 @@ import com.platzi_play.domain.dto.SuggestRequestDto;
 import com.platzi_play.domain.dto.UpdateMovieDto;
 import com.platzi_play.domain.service.MovieService;
 import com.platzi_play.domain.service.PlatziPLayAiService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -15,6 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/movies")
+@Tag(name = "Movies", description = "Operations about movies of PlatziPLay")
 public class MovieController {
     private final MovieService movieService;
     private final PlatziPLayAiService aiService;
@@ -29,7 +35,15 @@ public class MovieController {
         return ResponseEntity.ok(this.movieService.getAll());
     }
     @GetMapping("/{id}")
-    public ResponseEntity <MovieDto> getById(@PathVariable long id){
+    @Operation(
+            summary = "Get a movie by id",
+            description = "Return the movie who matches with the identifier send",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "Movie Found"),
+                    @ApiResponse(responseCode = "404", description = "Movie not found", content = @Content)
+            }
+    )
+    public ResponseEntity <MovieDto> getById(@Parameter(description = "Identifier from the movie to get", example = "9") @PathVariable long id){
         MovieDto movieDto = this.movieService.getById(id);
 
         if (movieDto == null){
